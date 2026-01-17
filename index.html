@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ChannelHub - Discover Best WhatsApp & Telegram Channels</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="jui.png" type="image/png">
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+    <div id="announcement-banner"
+        style="display:none; background: linear-gradient(90deg, #ff9a9e 0%, #fecfef 100%); color: #000; text-align: center; padding: 0.5rem; font-weight: bold; font-size: 0.9rem;">
+        <!-- Injected via JS -->
+    </div>
+
+    <header>
+        <div class="container nav-content">
+            <img src="jui.png" alt="ChannelHub" class="site-logo">
+            <div class="nav-actions">
+                <button class="btn-icon" id="theme-toggle" title="Toggle Theme">
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+                <button class="btn-icon" id="random-btn" title="Random Channel">
+                    <i class="fa-solid fa-dice"></i>
+                </button>
+                <button class="btn-primary" onclick="openModal('submit-modal')">
+                    <i class="fa-solid fa-plus"></i> Submit
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <h1>Discover the Best<br>Channels & Groups</h1>
+                <p>Curated directory of WhatsApp, Telegram & Discord communities.</p>
+                <div class="stats-bar">
+                    <div class="stat-item">
+                        <div class="stat-val" id="total-count">0</div>
+                        <div class="stat-label">Channels</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-val" id="live-users-count" style="color:var(--success)">0</div>
+                        <div class="stat-label">Users Online</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-val" id="wa-count">0</div>
+                        <div class="stat-label">WhatsApp</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-val" id="tg-count">0</div>
+                        <div class="stat-label">Telegram</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="container">
+            <!-- Tabs -->
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchTab('browse')">Browse</button>
+                <button class="tab-btn" onclick="switchTab('saved')">Saved <span id="saved-badge">0</span></button>
+                <button class="tab-btn" onclick="switchTab('collections')">Collections</button>
+            </div>
+
+            <!-- Collections View (Hidden by default) -->
+            <div id="collections-view" style="display: none; padding-bottom: 2rem;">
+                <div style="text-align: right; margin-bottom: 1rem;">
+                    <button class="btn-primary" onclick="openModal('create-collection-modal')">
+                        <i class="fa-solid fa-layer-group"></i> Create Collection
+                    </button>
+                </div>
+                <div id="collections-grid" class="channel-grid">
+                    <!-- Populated JS -->
+                </div>
+            </div>
+
+            <!-- Browse Controls -->
+            <div id="browse-controls" class="controls-section">
+                <div class="controls-grid">
+                    <div class="search-box">
+                        <input type="text" id="search-input" class="search-input" placeholder="Search channels...">
+                    </div>
+                    <select id="platform-filter" class="filter-select">
+                        <option value="all">All Platforms</option>
+                        <option value="WhatsApp">WhatsApp</option>
+                        <option value="Telegram">Telegram</option>
+                    </select>
+                    <select id="category-filter" class="filter-select">
+                        <option value="all">Categories</option>
+                        <!-- Populated by JS -->
+                    </select>
+                    <select id="lang-filter" class="filter-select">
+                        <option value="all">Languages</option>
+                        <!-- Populated by JS -->
+                    </select>
+                    <select id="country-filter" class="filter-select">
+                        <option value="all">Countries</option>
+                        <!-- Populated by JS -->
+                    </select>
+                </div>
+            </div>
+
+            <!-- Trending Section -->
+            <section class="trending-section">
+                <div class="container">
+                    <h2>🔥 Trending Channels</h2>
+                    <div id="trending-grid" class="channel-grid">
+                        <!-- Trending channels populated by JS -->
+                    </div>
+                </div>
+            </section>
+
+            <div id="channel-grid" class="channel-grid">
+                <!-- Channels populated by JS -->
+            </div>
+        </section>
+    </main>
+
+    <footer class="container"
+        style="margin-top: 4rem; padding-bottom: 2rem; text-align: center; color: var(--text-secondary);">
+        <p>&copy; 2026 ChannelHub</p>
+        <div style="margin-top: 1rem; display: flex; gap: 1rem; justify-content: center;">
+            <button onclick="openModal('verification-modal')" class="text-btn">Request Verification</button>
+        </div>
+    </footer>
+
+    <!-- Channel Info/Details Modal -->
+    <div id="info-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Channel Info</h2>
+                <button class="close-modal" onclick="closeModal('info-modal')">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div id="info-content" style="text-align: center;">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Submission Modal -->
+    <div id="submit-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Submit Channel</h2>
+                <button class="close-modal" onclick="closeModal('submit-modal')">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <form id="submit-form">
+                <div class="form-group">
+                    <label class="form-label">Channel Name</label>
+                    <input type="text" id="f-name" class="form-input" required placeholder="e.g. React Developers">
+                </div>
+
+                <!-- Auto Logo Logic will use URL -->
+                <div class="form-group">
+                    <label class="form-label">Invite Link (Logo auto-generated)</label>
+                    <input type="url" id="f-link" class="form-input" required placeholder="https://...">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Platform</label>
+                    <select id="f-platform" class="form-select" required>
+                        <option value="WhatsApp">WhatsApp</option>
+                        <option value="Telegram">Telegram</option>
+                    </select>
+                </div>
+
+                <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div>
+                        <label class="form-label">Category</label>
+                        <select id="f-category" class="form-select" required></select>
+                    </div>
+                    <div>
+                        <label class="form-label">Type</label>
+                        <select id="f-type" class="form-select" required>
+                            <option value="Channel">Channel</option>
+                            <option value="Group">Group</option>
+                            <option value="Community">Community</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div>
+                        <label class="form-label">Language</label>
+                        <select id="f-lang" class="form-select" required></select>
+                    </div>
+                    <div>
+                        <label class="form-label">Country</label>
+                        <select id="f-country" class="form-select" required></select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea id="f-desc" class="form-textarea" required
+                        placeholder="What is this community about?"></textarea>
+                </div>
+
+                <button type="submit" class="btn-primary" style="width: 100%">Submit for Review</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Comments Modal -->
+    <div id="comments-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="comments-title">Comments</h2>
+                <button class="close-modal" onclick="closeModal('comments-modal')">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div id="comments-list" class="comments-list"></div>
+            <form id="comment-form" style="margin-top: 1rem;">
+                <!-- Rating input injected by JS -->
+                <div class="form-group">
+                    <input type="text" id="comment-input" class="form-input" placeholder="Write a comment..." required>
+                </div>
+                <button type="submit" class="btn-primary">Post</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- QR Code Modal -->
+    <div id="qr-modal" class="modal">
+        <div class="modal-content" style="max-width: 300px; text-align: center;">
+            <div class="modal-header">
+                <h2 id="qr-modal-title">Scan to Join</h2>
+                <button class="close-modal" onclick="closeModal('qr-modal')">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div id="qrcode" style="margin: 1rem auto;"></div>
+            <p id="qr-modal-link-text" style="word-break: break-all;"></p>
+            <button class="btn-primary"
+                onclick="copyToClipboard(document.getElementById('qr-modal-link-text').innerText)">Copy Link</button>
+        </div>
+    </div>
+
+    <!-- Report Modal -->
+    <div id="report-modal" class="modal">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <h2>Report Channel</h2>
+                <button class="close-modal" onclick="closeModal('report-modal')">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <form id="report-form">
+                <input type="hidden" id="report-channel-id">
+                <div class="form-group">
+                    <label class="form-label">Reason</label>
+                    <select id="report-reason" class="form-select" required>
+                        <option value="Spam">Spam / Scam</option>
+                        <option value="Inappropriate">Inappropriate Content</option>
+                        <option value="Broken Link">Broken Link</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%; background: var(--danger);">Submit
+                    Report</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Verification Modal -->
+    <div id="verification-modal" class="modal">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <h2>Request Verification</h2>
+                <button class="close-modal" onclick="closeModal('verification-modal')">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <p style="color: var(--text-secondary); margin-bottom: 1rem;">Upload a screenshot proving you own your
+                channel to an image host (e.g. Imgur) and paste the link here.</p>
+            <form id="verification-form">
+                <div class="form-group">
+                    <label class="form-label">Channel Name</label>
+                    <input type="text" id="verify-name" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Proof URL (Imgur/etc)</label>
+                    <input type="url" id="verify-proof" class="form-input" required
+                        placeholder="https://i.imgur.com/...">
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%;">Submit Request</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Create Collection Modal -->
+    <div id="create-collection-modal" class="modal">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <h2>New Collection</h2>
+                <button class="close-modal" onclick="closeModal('create-collection-modal')">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <form id="collection-form">
+                <div class="form-group">
+                    <label class="form-label">Collection Name</label>
+                    <input type="text" id="collection-name" class="form-input" required
+                        placeholder="e.g. Best Crypto Groups">
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%;">Create</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- QRCode.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <!-- Firebase SDKs (Modular) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+    <!-- Config & Main Script -->
+    <script src="firebase-config.js"></script>
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
