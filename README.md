@@ -61,8 +61,6 @@ Simply open `index.html` in your browser.
 
 ## 🛡️ Admin Access
 
-*   **URL**: `/manage_x9z.html` (Hidden for security)
-*   **Default Password**: `admin123` (Change this in `admin.js` for production!)
 
 ## 📁 Project Structure
 
@@ -80,3 +78,4 @@ Feel free to submit Pull Requests or open Issues for new feature ideas like "Use
 
 ---
 *Built with ❤️ for Communities*
+
